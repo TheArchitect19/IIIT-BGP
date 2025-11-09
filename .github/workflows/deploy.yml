@@ -1,0 +1,34 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup SSH Key
+      run: |
+        echo "${{ secrets.EC2_KEY }}" > private_key.pem
+        chmod 600 private_key.pem
+
+    - name: Deploy to EC2
+      run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ${{ secrets.APP_DIR }}
+            sudo chown -R $USER:$USER .git
+            docker compose down
+            docker builder prune -f
+            docker image prune -a -f
+            git pull
+            docker compose build --no-cache
+            docker compose up -d
+            echo "Deployment completed successfully!"
+          EOF
+      
