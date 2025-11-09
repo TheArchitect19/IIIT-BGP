@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-//resolved
+//resolved deployment
 app.get('/', (req, res) => {
     res.send('Hello IIIT BGP!');
 });
