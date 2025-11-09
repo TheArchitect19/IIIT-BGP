@@ -22,7 +22,7 @@ jobs:
       run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ${{ secrets.APP_DIR }}
-            
+            sudo chown -R $USER:$USER .git
             docker compose down
             docker builder prune -f
             docker image prune -a -f
