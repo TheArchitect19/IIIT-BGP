@@ -3,7 +3,7 @@ const app = express();
 
 //resolved deployment
 app.get('/', (req, res) => {
-    res.send('Hello IIIT BGP!');
+    res.send('Hello IIIT!');
 });
 
 const PORT = process.env.PORT || 3000;
